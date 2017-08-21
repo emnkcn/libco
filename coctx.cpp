@@ -111,15 +111,15 @@ int coctx_make( coctx_t *ctx,coctx_pfn_t pfn,const void *s,const void *s1 )
 
 	return 0;
 }
-#elif defined(__x86_64__)
+#elif defined(__x86_64__) //TODO: kain 需要看下abi
 int coctx_make( coctx_t *ctx,coctx_pfn_t pfn,const void *s,const void *s1 )
 {
-	char *sp = ctx->ss_sp + ctx->ss_size; //此时指向栈底
+	char *sp = ctx->ss_sp + ctx->ss_size; //kain: 此时指向栈底
 	sp = (char*) ((unsigned long)sp & -16LL  ); //kain: -16LL是fffffffffffffff0，干掉低8位，字节对齐
 
-	memset(ctx->regs, 0, sizeof(ctx->regs));
+	memset(ctx->regs, 0, sizeof(ctx->regs)); //kain: 寄存器清零
 
-	ctx->regs[ kRSP ] = sp - 8;
+	ctx->regs[ kRSP ] = sp - 8; //TODO: kain: 为什么要-8？
 
 	ctx->regs[ kRETAddr] = (char*)pfn;
 
