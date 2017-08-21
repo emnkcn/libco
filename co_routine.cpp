@@ -117,7 +117,7 @@ static pid_t GetPid()
 {
     static __thread pid_t pid = 0;
     static __thread pid_t tid = 0;
-    if( !pid || !tid || pid != getpid() )
+    if( !pid || !tid || pid != getpid() ) //kain: 为什么可能出现!pid且pid != getpid()? fork一个新进程出来？
     {
         pid = getpid();
 #if defined( __APPLE__ )
@@ -474,7 +474,7 @@ struct stCoRoutine_t *co_create_env( stCoRoutineEnv_t * env, const stCoRoutineAt
 		at.stack_size = 1024 * 1024 * 8;
 	}
 
-	//TODO: 这是什么操作？
+	//TODO: kain:这是什么操作？
 	if( at.stack_size & 0xFFF ) 
 	{
 		at.stack_size &= ~0xFFF;
@@ -491,14 +491,14 @@ struct stCoRoutine_t *co_create_env( stCoRoutineEnv_t * env, const stCoRoutineAt
 	lp->arg = arg;
 
 	stStackMem_t* stack_mem = NULL;
-	if( at.share_stack )
+	if( at.share_stack ) //kain: 本线程内协程共享一个栈？
 	{
 		stack_mem = co_get_stackmem( at.share_stack);
 		at.stack_size = at.share_stack->stack_size;
 	}
 	else
 	{
-		stack_mem = co_alloc_stackmem(at.stack_size);
+		stack_mem = co_alloc_stackmem(at.stack_size); //kain: 分配一个栈，stack_buffer指向内存的首地址，stack_bp指向栈顶,stack_buffer+stack_size为栈基址
 	}
 	lp->stack_mem = stack_mem;
 

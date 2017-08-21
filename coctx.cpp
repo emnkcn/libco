@@ -114,8 +114,8 @@ int coctx_make( coctx_t *ctx,coctx_pfn_t pfn,const void *s,const void *s1 )
 #elif defined(__x86_64__)
 int coctx_make( coctx_t *ctx,coctx_pfn_t pfn,const void *s,const void *s1 )
 {
-	char *sp = ctx->ss_sp + ctx->ss_size;
-	sp = (char*) ((unsigned long)sp & -16LL  );
+	char *sp = ctx->ss_sp + ctx->ss_size; //此时指向栈底
+	sp = (char*) ((unsigned long)sp & -16LL  ); //kain: -16LL是fffffffffffffff0，干掉低8位，字节对齐
 
 	memset(ctx->regs, 0, sizeof(ctx->regs));
 
