@@ -18,6 +18,7 @@
 
 #ifndef __CO_EPOLL_H__
 #define __CO_EPOLL_H__
+
 #include <stdint.h>
 #include <stdlib.h>
 #include <assert.h>
@@ -32,17 +33,17 @@
 
 struct co_epoll_res
 {
-	int size;
+	int size; //TODO: kain: 干啥用的？没有用在co_epoll_wait的maxevents上？
 	struct epoll_event *events;
 	struct kevent *eventlist;
 };
-int 	co_epoll_wait( int epfd,struct co_epoll_res *events,int maxevents,int timeout );
-int 	co_epoll_ctl( int epfd,int op,int fd,struct epoll_event * );
-int 	co_epoll_create( int size );
+int 	co_epoll_wait( int epfd,struct co_epoll_res *events,int maxevents,int timeout ); //kain: epoll_wait 的wrapper
+int 	co_epoll_ctl( int epfd,int op,int fd,struct epoll_event * ); //kain: epoll_ctrl的wrapper
+int 	co_epoll_create( int size ); //kain: epoll_create的wrapper
 struct 	co_epoll_res *co_epoll_res_alloc( int n );
 void 	co_epoll_res_free( struct co_epoll_res * );
 
-#else
+#else //kain: 针对apple、freebsd平台自定义epoll相关的几个struct、宏、函数,用kqueue山寨一套epoll接口出来
 
 #include <sys/event.h>
 enum EPOLL_EVENTS

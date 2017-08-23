@@ -43,8 +43,7 @@ struct co_epoll_res *co_epoll_res_alloc( int n )
 		(struct co_epoll_res *)malloc( sizeof( struct co_epoll_res ) );
 
 	ptr->size = n;
-	ptr->events = (struct epoll_event*)calloc( 1,n * sizeof( struct epoll_event ) );
-
+	ptr->events = (struct epoll_event*)calloc( 1,n * sizeof( struct epoll_event ) ); //TODO: kain: calloc(1, n * m) 这是什么用法？？？
 	return ptr;
 
 }
